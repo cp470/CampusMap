@@ -1,0 +1,13 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.WLUCampusMap" parent="Theme.Material3.DayNight">
+        <item name="colorPrimary">@color/wlu_purple</item>
+        <item name="colorPrimaryVariant">@color/wlu_light_purple</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/wlu_gold</item>
+        <item name="colorSecondaryVariant">@color/wlu_gold</item>
+        <item name="colorOnSecondary">@color/black</item>
+    </style>
+
+    <style name="Theme.WLUCampusMap" parent="Base.Theme.WLUCampusMap" />
+</resources>

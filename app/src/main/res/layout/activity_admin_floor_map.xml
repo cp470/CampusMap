@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_margin="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/text_building_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Building"
+            android:textStyle="bold"
+            android:padding="8dp"/>
+
+        <Spinner
+            android:id="@+id/spinner_floor_select"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"/>
+
+        <Button
+            android:id="@+id/btnUploadFloorMap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Pick Floor Map Image/PDF"
+            android:layout_marginTop="6dp"/>
+
+        <ImageView
+            android:id="@+id/floorMapImageView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerInside"
+            android:visibility="gone"
+            android:layout_marginTop="8dp"/>
+
+        <Button
+            android:id="@+id/btnUploadToServer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Upload to Cloud"
+            android:layout_marginTop="10dp"/>
+
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

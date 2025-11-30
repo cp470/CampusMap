@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">WLU Campus Map</string>
+    <string name="title_activity_main">WLU Campus Map</string>
+
+
+    <!-- Permission messages -->
+    <string name="location_permission_required">Location permission is required to show your current location on the map.</string>
+    <string name="permission_denied">Location permission denied. You can enable it in app settings.</string>
+
+    <!-- Building details -->
+    <string name="building_details">Building Details</string>
+    <string name="open_floor_maps">Open Floor Maps</string>
+    <string name="search_hint">Search for classrooms, buildings...</string>
+
+    <!-- Sample building data -->
+    <string name="science_building_name">Science Building</string>
+    <string name="science_building_description">Home to science departments and laboratories.</string>
+
+    <string name="library_name">Library</string>
+    <string name="library_description">University library with study spaces and resources.</string>
+
+    <string name="concourse_name">Concourse</string>
+    <string name="concourse_description">Student center with food services and meeting spaces.</string>
+    <string name="admin_floor_maps">Admin Floor Maps</string>
+</resources>
