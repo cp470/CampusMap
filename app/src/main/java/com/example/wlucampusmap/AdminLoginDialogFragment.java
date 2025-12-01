@@ -2,10 +2,14 @@ package com.example.wlucampusmap;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -41,19 +45,25 @@ public class AdminLoginDialogFragment extends DialogFragment {
         usernameInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
         passwordInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
-        return new AlertDialog.Builder(requireContext())
-                .setTitle("Admin Login")
+        Button loginButton = view.findViewById(R.id.login_button);
+
+        AlertDialog alertDialog = new AlertDialog.Builder(requireContext())
                 .setView(view)
-                .setPositiveButton("Login", (DialogInterface dialog, int which) -> {
+                .create();
+
+        alertDialog.setCanceledOnTouchOutside(true);
+        setCancelable(true);
+
+        loginButton.setOnClickListener( v -> {
                     String username = usernameInput.getText().toString().trim();
                     String password = passwordInput.getText().toString();
                     boolean success = adminManager != null && adminManager.login(username, password);
                     if (loginListener != null) loginListener.onLoginResult(success);
-                })
-                .setNegativeButton("Cancel", (d, w) -> {
-                    if (loginListener != null) loginListener.onLoginResult(false);
-                    dismiss();
-                })
-                .create();
+                    alertDialog.dismiss();
+                });
+
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        return alertDialog;
     }
 }

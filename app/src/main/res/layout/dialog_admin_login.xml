@@ -1,9 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="600dp"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:padding="15dp"
+    android:background="@drawable/dialog_bg"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        >
+        <ImageView
+            android:src="@mipmap/laurier_logo"
+            android:layout_height="100dp"
+            android:layout_width="100dp"
+            android:scaleType="fitCenter"
+            android:translationY="-16dp"
+            />
+        <TextView
+            android:id="@+id/adminLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Admin Login"
+            android:textSize="30dp"
+            android:textColor="#303030"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.02"
+            android:includeFontPadding="false"
+            android:translationY="-10dp"
+            />
+
+    </LinearLayout>
 
     <EditText
         android:id="@+id/edit_admin_username"
@@ -12,7 +42,9 @@
         android:hint="Username"
         android:inputType="text"
         android:maxLines="1"
-        android:singleLine="true" />
+        android:singleLine="true"
+        android:background="@drawable/edittext_border"
+        />
 
     <EditText
         android:id="@+id/edit_admin_password"
@@ -22,5 +54,29 @@
         android:inputType="textPassword"
         android:maxLines="1"
         android:singleLine="true"
-        android:layout_marginTop="12dp"/>
+        android:layout_marginTop="12dp"
+        android:background="@drawable/edittext_border"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:gravity="center_horizontal"
+        android:paddingTop="10dp"
+        >
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/login_button"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Login"
+            android:backgroundTint="@color/wlu_gold" />
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+    </LinearLayout>
 </LinearLayout>

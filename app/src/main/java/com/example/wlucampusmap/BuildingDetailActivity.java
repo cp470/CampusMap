@@ -7,6 +7,10 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.appbar.MaterialToolbar;
+
+import java.util.Objects;
+
 public class BuildingDetailActivity extends AppCompatActivity {
 
     @Override
@@ -42,5 +46,13 @@ public class BuildingDetailActivity extends AppCompatActivity {
             floorMapIntent.putExtra("building_floors", floors);
             startActivity(floorMapIntent);
         });
+
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
+        toolbar.setNavigationOnClickListener(v ->
+                getOnBackPressedDispatcher().onBackPressed()
+        );
     }
 }

@@ -15,32 +15,38 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        >
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/wlu_purple"
-            app:title="@string/app_name" />
+            app:popupTheme="@style/WLU.PopupMenu"
+            app:title="@string/app_name"
 
+            />
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            app:cardElevation="8dp"
-            app:cardCornerRadius="8dp">
+            android:layout_margin="20dp"
+            app:cardElevation="15dp"
+            app:cardCornerRadius="15dp">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/search_hint"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
-
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:padding="2dp"
+                app:boxBackgroundMode="none"
+                >
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/search_edit_text"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="match_parent"
+                    />
 
             </com.google.android.material.textfield.TextInputLayout>
 

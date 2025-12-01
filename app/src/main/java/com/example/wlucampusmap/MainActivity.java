@@ -3,17 +3,23 @@ package com.example.wlucampusmap;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -24,9 +30,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -69,6 +77,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         });
+
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setOverflowIcon(
+                ContextCompat.getDrawable(this, android.R.drawable.ic_menu_info_details)
+        );
     }
 
     private void setupSearch() {
@@ -218,7 +232,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Marker marker = googleMap.addMarker(new MarkerOptions()
                     .position(location)
                     .title(building.getName())
-                    .snippet(building.getDescription()));
+                    .snippet(building.getDescription())
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET))
+                    );
             if (marker != null) {
                 buildingMarkers.put(building.getName(), marker);
                 marker.showInfoWindow();
@@ -277,15 +293,40 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void showAccountSettingsDialog() {
-        final String[] options = {"Change Name", "Change Username", "Change Password", "Cancel"};
-        new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle("Account Settings")
-                .setItems(options, (dialog, which) -> {
-                    if (which == 0) showChangeNameDialog();
-                    else if (which == 1) showChangeUsernameDialog();
-                    else if (which == 2) showChangePasswordDialog();
-                })
-                .show();
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.dialog_admin_settings, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView);
+
+        // IMPORTANT: create the dialog AFTER setting the view
+        AlertDialog dialog = builder.create();
+
+        // Optional rounded background fix
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        // Now find views from dialogView
+        LinearLayout changeName = dialogView.findViewById(R.id.change_name_btn);
+        LinearLayout changeUsername = dialogView.findViewById(R.id.change_username_btn);
+        LinearLayout changePassword = dialogView.findViewById(R.id.change_password_btn);
+
+
+        changeName.setOnClickListener(v -> {
+            showChangeNameDialog();
+            dialog.dismiss();
+        });
+
+        changeUsername.setOnClickListener(v -> {
+            showChangeUsernameDialog();
+            dialog.dismiss();
+        });
+
+        changePassword.setOnClickListener(v -> {
+            showChangePasswordDialog();
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
 
     private void showChangeNameDialog() {
@@ -414,7 +455,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Marker marker = googleMap.addMarker(new MarkerOptions()
                         .position(location)
                         .title(building.getName())
-                        .snippet(building.getDescription()));
+                        .snippet(building.getDescription())
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET))
+                );
                 if (marker != null) {
                     buildingMarkers.put(building.getName(), marker);
                 }
@@ -494,41 +537,57 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // ==== Updated: "Manage Floor Maps" & "Delete Floor Map" REMOVED ====
     private void showBuildingOptions(Building building) {
-        String[] options;
-        if (adminManager.isAdminLoggedIn()) {
-            options = new String[]{
-                    "View Building Details",
-                    "View Floor Maps",
-                    "Get Directions",
-                    "Upload Floor Map"
-            };
-        } else {
-            options = new String[]{
-                    "View Building Details",
-                    "View Floor Maps",
-                    "Get Directions"
-            };
-        }
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.dialog_building, null);
 
-        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
-        builder.setTitle(building.getName());
-        builder.setItems(options, (dialog, which) -> {
-            if (which == 0) {
-                openBuildingDetails(building);
-            } else if (which == 1) {
-                showFloorMapSelection(building);
-            } else if (which == 2) {
-                openDirections(building);
-            } else if (which == 3 && adminManager.isAdminLoggedIn()) {
-                Intent intent = new Intent(this, AdminFloorMapActivity.class);
-                intent.putExtra("building_name", building.getName());
-                intent.putExtra("building_floors", building.getFloors());
-                startActivity(intent);
-            }
-            // No delete or manage case needed!
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView);
+
+        // IMPORTANT: create the dialog AFTER setting the view
+        AlertDialog dialog = builder.create();
+
+        // Optional rounded background fix
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        // Now find views from dialogView
+        TextView buildingTitle = dialogView.findViewById(R.id.building_title);
+        LinearLayout buildingDetails = dialogView.findViewById(R.id.building_details_btn);
+        LinearLayout viewFloorMaps = dialogView.findViewById(R.id.view_floor_maps_btn);
+        LinearLayout getDirections = dialogView.findViewById(R.id.get_directions_btn);
+        LinearLayout uploadFloorMap = dialogView.findViewById(R.id.upload_floor_map_btn);
+
+        buildingTitle.setText(building.getName());
+
+        buildingDetails.setOnClickListener(v -> {
+            openBuildingDetails(building);
+            dialog.dismiss();
         });
-        builder.show();
+
+        viewFloorMaps.setOnClickListener(v -> {
+            showFloorMapSelection(building);
+            dialog.dismiss();
+        });
+
+        getDirections.setOnClickListener(v -> {
+            openDirections(building);
+            dialog.dismiss();
+        });
+
+        uploadFloorMap.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AdminFloorMapActivity.class);
+            intent.putExtra("building_name", building.getName());
+            intent.putExtra("building_floors", building.getFloors());
+            startActivity(intent);
+            dialog.dismiss();
+        });
+
+        uploadFloorMap.setVisibility(adminManager.isAdminLoggedIn()
+                ? View.VISIBLE
+                : View.GONE);
+
+        dialog.show();
     }
+
 
     private void openDirections(Building building) {
         String key = getBuildingKeyFor(building);

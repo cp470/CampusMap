@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="600dp"
+    android:orientation="vertical"
+    android:padding="15dp"
+    android:background="@drawable/dialog_bg"
+    >
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Room/Office"
+        android:textSize="24dp"
+        android:textColor="#303030"
+        android:fontFamily="sans-serif-medium"
+        android:letterSpacing="0.02"
+        android:includeFontPadding="false"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="25dp"
+        android:gravity="center"
+        />
+    <EditText
+        android:id="@+id/room_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint=" Room Number"
+        android:inputType="text"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:background="@drawable/edittext_border"
+        android:drawableLeft="@drawable/ic_number"
+        />
+
+    <EditText
+        android:id="@+id/room_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint=" Room Type"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/edittext_border"
+        android:drawableLeft="@drawable/ic_type"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:gravity="center_horizontal"
+        android:paddingTop="10dp"
+        >
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Add"
+            android:backgroundTint="@color/wlu_light_purple" />
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+    </LinearLayout>
+</LinearLayout>

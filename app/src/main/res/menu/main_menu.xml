@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
+    <!-- Shows on the toolbar when space allows -->
     <item
         android:id="@+id/action_admin"
         android:title="Admin Panel"
         android:icon="@android:drawable/ic_menu_manage"
         app:showAsAction="ifRoom" />
 
+    <!-- Hidden inside overflow menu -->
     <item
         android:id="@+id/action_login"
         android:title="Admin Login"

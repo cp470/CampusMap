@@ -2,13 +2,17 @@ package com.example.wlucampusmap;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -19,13 +23,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.nio.channels.AlreadyBoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class FloorMapActivity extends AppCompatActivity {
     private static final String PREFS = "WLUCampusMapPrefs";
@@ -57,7 +65,7 @@ public class FloorMapActivity extends AppCompatActivity {
 
         floorMapImageView = findViewById(R.id.floormap_imageview);
         classroomListView = findViewById(R.id.classroom_list_view);
-        floorInfoTextView = findViewById(R.id.floor_info_text_view);
+//        floorInfoTextView = findViewById(R.id.floor_info_text_view);
         roomSectionTitle = findViewById(R.id.room_section_title);
         floorSpinner = findViewById(R.id.floor_spinner);
         fabAddRoom = findViewById(R.id.fab_add_room);
@@ -75,21 +83,29 @@ public class FloorMapActivity extends AppCompatActivity {
             fabAddRoom.setVisibility(View.GONE);
         }
         fabAddRoom.setOnClickListener(v -> showAddEditRoomDialog(null, currentFloor));
+
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
+        toolbar.setNavigationOnClickListener(v ->
+                getOnBackPressedDispatcher().onBackPressed()
+        );
     }
 
     private void setupFloorSpinner() {
         String[] floorOptions = new String[totalFloors];
         for (int i = 0; i < totalFloors; i++)
             floorOptions[i] = "Floor " + (i + 1);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, floorOptions);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner, floorOptions);
+        adapter.setDropDownViewResource(R.layout.spinner);
         floorSpinner.setAdapter(adapter);
 
         floorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 currentFloor = position + 1;
-                floorInfoTextView.setText("Floor " + currentFloor);
+//                floorInfoTextView.setText("Floor " + currentFloor);
                 fetchAndShowFloorMap(currentFloor);
                 showClassroomsForFloor(currentFloor);
             }
@@ -162,41 +178,61 @@ public class FloorMapActivity extends AppCompatActivity {
 
     private void showClassroomOptions(Classroom classroom, int floor) {
         // Only admins reach here
-        CharSequence[] options = {"Edit", "Delete", "Cancel"};
-        new AlertDialog.Builder(this)
-                .setTitle(classroom.getRoomNumber())
-                .setItems(options, (dialog, which) -> {
-                    if (which == 0) showAddEditRoomDialog(classroom, floor);
-                    else if (which == 1) showDeleteConfirmationDialog(classroom, floor);
-                })
-                .show();
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.dialog_classroom_options, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView);
+
+        // IMPORTANT: create the dialog AFTER setting the view
+        AlertDialog dialog = builder.create();
+
+        // Optional rounded background fix
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        // Now find views from dialogView
+        TextView roomTitle = dialogView.findViewById(R.id.room_title);
+        LinearLayout editButton = dialogView.findViewById(R.id.edit_btn);
+        LinearLayout deleteButton = dialogView.findViewById(R.id.delete_btn);
+
+        roomTitle.setText(classroom.getRoomNumber());
+
+        editButton.setOnClickListener(v -> showAddEditRoomDialog(classroom, floor));
+        deleteButton.setOnClickListener(v -> showDeleteConfirmationDialog(classroom, floor, dialog));
+
+        dialog.show();
     }
 
     private void showAddEditRoomDialog(Classroom classroom, int floor) {
         boolean isEdit = classroom != null;
-        EditText etRoomNumber = new EditText(this);
-        etRoomNumber.setHint("Room Number");
-        etRoomNumber.setInputType(InputType.TYPE_CLASS_TEXT);
-        if (isEdit) etRoomNumber.setText(classroom.getRoomNumber());
 
-        EditText etRoomType = new EditText(this);
-        etRoomType.setHint("Room Type");
-        etRoomType.setInputType(InputType.TYPE_CLASS_TEXT);
-        if (isEdit) etRoomType.setText(classroom.getRoomType());
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.dialog_add_room, null);
 
-        android.widget.LinearLayout container = new android.widget.LinearLayout(this);
-        container.setOrientation(android.widget.LinearLayout.VERTICAL);
-        int padding = (int) (16 * getResources().getDisplayMetrics().density);
-        container.setPadding(padding, padding, padding, padding);
-        container.addView(etRoomNumber);
-        container.addView(etRoomType);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView);
 
-        new AlertDialog.Builder(this)
-                .setTitle(isEdit ? "Edit Room/Office" : "Add Room/Office")
-                .setView(container)
-                .setPositiveButton(isEdit ? "Save" : "Add", (dialog, which) -> {
-                    String num = etRoomNumber.getText().toString().trim();
-                    String type = etRoomType.getText().toString().trim();
+        // IMPORTANT: create the dialog AFTER setting the view
+        AlertDialog dialog = builder.create();
+
+        // Optional rounded background fix
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        // Now find views from dialogView
+        EditText roomNumber = dialogView.findViewById(R.id.room_number);
+        EditText roomType = dialogView.findViewById(R.id.room_type);
+        TextView label = dialogView.findViewById(R.id.label);
+        MaterialButton button = dialogView.findViewById(R.id.button);
+
+
+        label.setText(isEdit ? "Edit Room/Office" : "Add Room/Office");
+        roomNumber.setText(isEdit ? classroom.getRoomNumber() : "");
+        roomType.setText(isEdit ? classroom.getRoomType() : "");
+        button.setText(isEdit ? "Save" : "Add");
+
+        button.setOnClickListener(v -> {
+                    String num = roomNumber.getText().toString().trim();
+                    String type = roomType.getText().toString().trim();
                     if (num.isEmpty() || type.isEmpty()) {
                         Toast.makeText(this, "Both fields required", Toast.LENGTH_SHORT).show();
                         return;
@@ -209,22 +245,43 @@ public class FloorMapActivity extends AppCompatActivity {
                     }
                     saveClassroomsToPrefs(buildingName, allClassrooms);
                     showClassroomsForFloor(floor);
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
+                    dialog.dismiss();
+                }
+        );
+
+
+        dialog.show();
     }
 
-    private void showDeleteConfirmationDialog(Classroom classroom, int floor) {
-        new AlertDialog.Builder(this)
-                .setTitle("Delete Room/Office")
-                .setMessage("Delete " + classroom.getRoomNumber() + "?")
-                .setPositiveButton("Delete", (dialog, which) -> {
-                    allClassrooms.remove(classroom);
-                    saveClassroomsToPrefs(buildingName, allClassrooms);
-                    showClassroomsForFloor(floor);
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
+    private void showDeleteConfirmationDialog(Classroom classroom, int floor, AlertDialog previousDialog) {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.dialog_delete_confirmation, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView);
+
+        // IMPORTANT: create the dialog AFTER setting the view
+        AlertDialog dialog = builder.create();
+
+        // Optional rounded background fix
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        // Now find views from dialogView
+        TextView roomTitle = dialogView.findViewById(R.id.room_title);
+        LinearLayout deleteButton = dialogView.findViewById(R.id.delete_btn);
+
+        roomTitle.setText("Delete Room/Office " + classroom.getRoomNumber() + "?");
+
+        deleteButton.setOnClickListener(v -> {
+            allClassrooms.remove(classroom);
+            saveClassroomsToPrefs(buildingName, allClassrooms);
+            showClassroomsForFloor(floor);
+            previousDialog.dismiss();
+            dialog.dismiss();
+
+        });
+
+        dialog.show();
     }
 
     public static List<Classroom> getClassroomsByFloor(List<Classroom> allClassrooms, int floor) {

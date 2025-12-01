@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        >
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/wlu_purple"
+            app:title="@string/app_name"
+            />
+    </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
         android:orientation="vertical"
@@ -16,7 +31,9 @@
             android:layout_height="wrap_content"
             android:text="Building"
             android:textStyle="bold"
-            android:padding="8dp"/>
+            android:padding="8dp"
+            android:layout_marginTop="60dp"
+            />
 
         <Spinner
             android:id="@+id/spinner_floor_select"
